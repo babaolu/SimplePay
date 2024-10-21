@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useRef } from "react";
-import QRCode from "qrcode";
+import QRCode, { QRCodeToDataURLOptions } from "qrcode";
 import jsQR from "jsqr";
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
     const formData = Object.fromEntries(new FormData(event.currentTarget));
     console.log("FormData: ", formData);
     
-    const opts = {
+    const opts: QRCodeToDataURLOptions = {
       errorCorrectionLevel: 'H',  // High error correction level
       type: 'image/png',
       margin: 2,

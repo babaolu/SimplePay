@@ -8,11 +8,12 @@ export default function Scanner() {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isDecodedVisible, setIsDecodedVisible] = useState(false);
   const [cameras, setCameras] = useState<CameraDevice[]>([]);
-  const [selectedCameraId, setSelectedCameraId] = useState<string | null>(null);
+  const [isFileChoice, setIsFileChoice] = useState(false);
   const [genCode, setGenCode] = useState({number: "", bankname: ""});
   const scannerRef = useRef<Html5Qrcode | null>(null);
 
   function selectCamera() {
+    setIsFileChoice(false);
     setIsScannerVisible(true);
     setIsDecodedVisible(false);
     Html5Qrcode.getCameras()
@@ -43,12 +44,27 @@ export default function Scanner() {
     );
   }
 
-  function fileScan(codeReader: Html5Qrcode) {
+  function selectFile() {
+    setIsFileChoice(true);
+    setIsScannerVisible(true);
+    setIsDecodedVisible(false);
+  }
+
+  function fileScan(event : React.ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files || event.target.files?.length === 0) { return; }
+    
     if (!scannerRef.current) {
-      setIsScannerVisible(true);
-      const codeReader = new Html5Qrcode("reader");
-      scannerRef.current = codeReader;
+      scannerRef.current = new Html5Qrcode("reader");
     }
+
+    scannerRef.current?.scanFile(event.target.files[0], false)
+    .then(decodedText => {
+    console.log(`Code matched = ${ decodedText }`);
+    setGenCode(JSON.parse(decodedText));
+    setIsFileChoice(false);
+    setIsScannerVisible(false);
+    setIsDecodedVisible(true);
+    })
   }
 
   function onScanSuccess(decodedText : string, decodedResult : object) {
@@ -83,21 +99,23 @@ export default function Scanner() {
               Camera Scan
             </button>
             {/* Dropdown list of available cameras */}
-        {isDropdownVisible && (
-          <div className="bg-white border rounded p-4 mt-2">
-            {cameras.map((camera) => (
-            <button
-              type="button"
-              key={camera.id}
-              onClick={() => cameraScan(camera.id)}
-              className="block text-left w-full py-2 px-4 hover:bg-gray-200 cursor-pointer"
-              >
-              {camera.label || `Camera ${camera.id}`}
-            </button>
-          ))}
-         </div>
-        )}
-            <button onClick={() => scannerRef.current && fileScan(scannerRef.current)}
+            {isDropdownVisible && (<div className="bg-white border rounded p-4 mt-2">
+              {cameras.map((camera) => (
+              <button
+                type="button"
+                key={camera.id}
+                onClick={() => cameraScan(camera.id)}
+                className="block text-left w-full py-2 px-4 hover:bg-gray-200 cursor-pointer"
+                >
+                {camera.label || `Camera ${camera.id}`}
+              </button>
+              ))}
+            </div>)}
+            {isFileChoice && (<div>
+            <label htmlFor="QRfile">Select QR File</label>
+            <input id="QRfile" type="file" accept="image/*" onChange={fileScan}/>
+            </div>)}
+            <button onClick={selectFile}
               className="flex rounded-full bg-blue-600 text-background border border-solid items-center justify-center text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 hover:bg-blue-500 transition-colors max-w-18 gap-2">
               File Scan
             </button>
