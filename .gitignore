@@ -1,1 +1,10 @@
+# local env files
 .env
+
+# dependencies
+node_modules
+
+# temporary files
+*.swp
+\#*
+*#
