@@ -93,7 +93,7 @@ export default function Scanner() {
               <p>Bank Name: {genCode.bankname}</p>
             </div>
             )}
-            <button onClick={selectCamera}
+            <button type="button" onClick={selectCamera}
               className="flex rounded-full bg-foreground text-background border border-solid items-center justify-center text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 hover:bg-[#bd2e1e] transition-colors max-w-18 gap-2">
               Camera Scan
             </button>

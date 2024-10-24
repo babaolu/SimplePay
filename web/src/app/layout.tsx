@@ -60,7 +60,11 @@ function Header() {
             height={80}
           />
         </a>
-      <Link href="/login">Login</Link></nav>
+        <div className="ml-auto flex gap-4">
+          <Link href="/login">Login</Link>
+          <Link href="/signup">SignUp</Link>
+        </div>
+      </nav>
     </header>
   );
 }

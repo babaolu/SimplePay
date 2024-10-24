@@ -7,13 +7,16 @@ import { app } from "../firebase";
 import Image from "next/image";
 import background from "../../../public/background.png";
 
-export default function LoginPage() {
+export default function Signup() {
     const [error, setError] = useState(null);
     const [show, setShow] = useState(true);
     const [user, setUser] = useState({
       username: "",
+      fname: "",
+      lname: "",
       email: "",
       password: "",
+      img: "",
     });
   
     //handle all notifications
@@ -115,6 +118,42 @@ export default function LoginPage() {
             </div>
   
             <form onSubmit={handleSubmit}>
+              {/* <!-- First Name Input --> */}
+              <div className="max-w-[450px] mx-auto flex flex-row justify-between items-center mb-3">
+                <div className="w-[48%]">
+                  <label
+                    htmlFor="fname"
+                    className="text-[#344054] text-xs font-normal mb-1 inline-block"
+                  >
+                    First name
+                  </label>
+                  <input
+                    type="text"
+                    id="fname"
+                    name="fname"
+                    className="input focus:outline-none focus:border-[#0e9f6e] focus-within:outline-none focus-within:border-[#0e9f6e] placeholder:text-sm placeholder:text-[#BEB5C3]"
+                    placeholder="First name"
+                    onChange={handleChange}
+                  />
+                </div>
+                {/* <!-- Last Name Input --> */}
+                <div className="w-[48%]">
+                  <label
+                    htmlFor="lname"
+                    className="text-[#344054] text-xs font-normal mb-1 inline-block"
+                  >
+                    Last name
+                  </label>
+                  <input
+                    type="text"
+                    id="lname"
+                    name="lname"
+                    className="input focus:outline-none focus:border-[#0e9f6e] focus-within:outline-none focus-within:border-[#0e9f6e] placeholder:text-sm placeholder:text-[#BEB5C3]"
+                    placeholder="Last name"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
               <div className="max-w-[450px] mx-auto">
                 <label
                   htmlFor="email"
@@ -187,13 +226,34 @@ export default function LoginPage() {
                   </div>
                 </div>
               </div> 
-              {/* <!-- Signin Button --> */}
+              {/* <!-- Terms checkbox --> */}
+              <div className="mt-4 mb-5 max-w-[450px] mx-auto flex items-center">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  name="terms"
+                  className="w-3 h-3 text-blue-600"
+                />
+                <label htmlFor="terms" className="text-gray-600 ml-2 text-xs">
+                  Yes, I agree to SimplePay's{" "}
+                  <a href="" className="text-[#6941c6]">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a href="" className="text-[#6941c6]">
+                    Privacy Policy
+                  </a>
+                  .
+                </label>
+              </div>
+  
+              {/* <!-- Signup Button --> */}
               <div className="max-w-[450px] mx-auto mt-4">
                 <button
                   type="submit"
                   className="text-white text-sm w-fit !bg-[#0E9F6E]  hover:!bg-[#046c4e] font-semibold rounded-md py-2 px-4 tracking-[0.05em]"
                 >
-                  SignIn
+                  Signup
                 </button>
                 {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
               </div>
