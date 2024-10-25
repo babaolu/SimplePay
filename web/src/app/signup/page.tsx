@@ -1,44 +1,44 @@
 "use client";
 
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider,
-    signInWithPopup } from "firebase/auth";
+    signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { useState } from "react";
 import { app } from "../firebase";
 import Image from "next/image";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import backRequest from "../utils/backRequest";
 import background from "../../../public/background.png";
 
 export default function Signup() {
     const [error, setError] = useState(null);
     const [show, setShow] = useState(true);
     const [user, setUser] = useState({
-      username: "",
       fname: "",
       lname: "",
       email: "",
       password: "",
-      img: "",
     });
   
     //handle all notifications
   
-    const handleChange = (e) => {
+    const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
       setUser((prev) => {
-        return { ...prev, [e.target.name]: e.target.value };
+        return { ...prev, [event.target.name]: event.target.value };
       });
     };
   
-    const handleGoogleClick = async () => {
+    async function handleGoogleClick() {
       try {
         const provider = new GoogleAuthProvider();
         const auth = getAuth(app);
         const result = await signInWithPopup(auth, provider);
         const user1 = result.user;
         console.log(user1);
-        await newRequest.post("/auth/google", {
+        await backRequest.post("/auth/google", {
           email: user1.email,
           name: user1.displayName,
           img: user1.photoURL,
-          country: "Algeria",
         });
   
         // Show success notification
@@ -53,18 +53,21 @@ export default function Signup() {
       }
     };
   
-    async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
-      e.preventDefault();
+    async function handleSubmit(event : React.FormEvent<HTMLFormElement>) {
+      event.preventDefault();
       const auth = getAuth(app);
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, user.email, user.password);
         // Signed in 
         const user = userCredential.user;
         // Perform further actions with the user object
-      } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(`Error ${errorCode}: ${errorMessage}`);
+      } catch (err) {
+        console.log("could not login", error);
+        setError(err.response.data);
+        // Show error notification
+        toast.error(error || "Signup failed. Please try again.", {
+          position: "top-right",
+        });
       }
       }
   
@@ -78,7 +81,7 @@ export default function Signup() {
         {/* <!-- Right: Login Form --> */}
         <div className=" w-full h-screen lg:w-2/3 flex flex-col justify-between items-center">
   
-          <div className="bg-white flex-1 pt-6 px-5 pb-12 inline-block max-h-max mt-14">
+          <div className="bg-white flex-1 flex-shrink-1 max-w-sm pt-6 px-5 pb-12 inline-block max-h-max mt-14 rounded-xl">
             <h4 className="max-w-[450px] mx-auto text-[#333] text-2xl font-normal mb-6">
               Create an account
             </h4>
@@ -119,11 +122,11 @@ export default function Signup() {
   
             <form onSubmit={handleSubmit}>
               {/* <!-- First Name Input --> */}
-              <div className="max-w-[450px] mx-auto flex flex-row justify-between items-center mb-3">
-                <div className="w-[48%]">
+              <div className="relative max-w-[450px] mx-auto flex sm:flex-col lg:flex-row justify-between items-center mb-3">
+                <div className="w-[48%] relative">
                   <label
                     htmlFor="fname"
-                    className="text-[#344054] text-xs font-normal mb-1 inline-block"
+                    className="text-[#344054] text-sm font-normal mb-1 inline-block"
                   >
                     First name
                   </label>
@@ -137,10 +140,10 @@ export default function Signup() {
                   />
                 </div>
                 {/* <!-- Last Name Input --> */}
-                <div className="w-[48%]">
+                <div className="w-[48%] relative">
                   <label
                     htmlFor="lname"
-                    className="text-[#344054] text-xs font-normal mb-1 inline-block"
+                    className="text-[#344054] text-sm font-normal mb-1 inline-block"
                   >
                     Last name
                   </label>
@@ -157,7 +160,7 @@ export default function Signup() {
               <div className="max-w-[450px] mx-auto">
                 <label
                   htmlFor="email"
-                  className="text-[#344054] text-xs font-normal mb-1 inline-block"
+                  className="text-[#344054] text-sm font-normal mb-1 inline-block"
                 >
                   Email
                 </label>
@@ -174,7 +177,7 @@ export default function Signup() {
               <div className="max-w-[450px] mx-auto mt-3 leading-normal">
                 <label
                   htmlFor="password"
-                  className="text-[#344054] text-xs font-normal mb-1 inline-block"
+                  className="text-[#344054] text-sm font-normal mb-1 inline-block"
                 >
                   Password
                 </label>
@@ -262,13 +265,13 @@ export default function Signup() {
         </div>
   
         {/* <!-- Right: Image --> */}
-        <div className="w-1/3 h-screen hidden border-l-2 border-[#f0f0f0] relative lg:flex lg:flex-col lg:justify-between">
+        <div className="w-1/3 h-screen hidden border-l-2 relative lg:flex lg:flex-col lg:justify-between">
           <div className="relative h-full">
             <Image
               aria-hidden
               src={background}
               alt="Background Image"
-              className="object-cover w-full h-full max-w-full max-h-full"
+              className="object-cover w-full h-full max-w-full max-h-full rounded-tl-3xl"
             /> 
           </div>
         </div>

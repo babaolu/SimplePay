@@ -16,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "SimplePay - Home",
+  title: "SimplePay",
   description: "Home of SimplePay",
 };
 
@@ -45,11 +45,10 @@ function Header() {
   return (
     <header className="row-start-3 flex gap-6 flex-wrap bg-[#d3e8eb]">
       <nav className="w-full flex flex-row">
-        <a
+        <Link
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           aria-label="Logo visit to Home"
-          href="/"
-          target="_blank"
+          href="/home"
           rel="noopener noreferrer"
         >
           <Image
@@ -59,8 +58,8 @@ function Header() {
             width={350}
             height={80}
           />
-        </a>
-        <div className="ml-auto flex gap-4">
+        </Link>
+        <div className="ml-auto my-auto mr-4 flex gap-4 text-[#083316] text-2xl font-bold">
           <Link href="/login">Login</Link>
           <Link href="/signup">SignUp</Link>
         </div>
