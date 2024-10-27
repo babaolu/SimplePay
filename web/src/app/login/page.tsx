@@ -5,6 +5,7 @@ import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider,
 import { useState } from "react";
 import { app } from "../firebase";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import backRequest from "../utils/backRequest";
@@ -18,6 +19,7 @@ export default function LoginPage() {
       email: "",
       password: "",
     });
+    const router = useRouter();
   
     //handle all notifications
   
@@ -40,6 +42,9 @@ export default function LoginPage() {
         
         // The signed-in user info.
         const user = result.user;
+        toast.success("Signup successful!", { position: "top-right" });
+        
+        router.push("/home");
 
       } catch (err) {
         console.log("could not login with google", err);
@@ -60,6 +65,9 @@ export default function LoginPage() {
         // Signed in 
         const user = userCredential.user;
         // Perform further actions with the user object
+        toast.success("Signup successful!", { position: "top-right" });
+        
+        router.push("/home");
       } catch (error) {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -198,6 +206,7 @@ export default function LoginPage() {
                   SignIn
                 </button>
                 {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+                <ToastContainer/>
               </div>
             </form>
           </div>

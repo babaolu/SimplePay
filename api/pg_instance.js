@@ -13,7 +13,7 @@ async function dbSetup() {
       email VARCHAR(48));`);
     
     await client.query(`CREATE TABLE IF NOT EXISTS accounts (
-      id VARCHAR(64) PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+      id PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
       accountNumber CHAR(10),
       bankName VARCHAR(64),
       user_id VARCHAR(64),
@@ -24,3 +24,6 @@ async function dbSetup() {
     console.error(err);
   }
 }
+dbSetup();
+
+export { pool };

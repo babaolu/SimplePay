@@ -5,6 +5,7 @@ import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider,
 import { useState } from "react";
 import { app } from "../firebase";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import backRequest from "../utils/backRequest";
@@ -19,6 +20,7 @@ export default function Signup() {
       email: "",
       password: "",
     });
+    const router = useRouter();
   
     //handle all notifications
   
@@ -33,16 +35,17 @@ export default function Signup() {
         const provider = new GoogleAuthProvider();
         const auth = getAuth(app);
         const result = await signInWithPopup(auth, provider);
-        const user1 = result.user;
-        console.log(user1);
-        await backRequest.post("/auth/google", {
-          email: user1.email,
-          name: user1.displayName,
-          img: user1.photoURL,
+        const googleUser = result.user;
+        console.log(googleUser);
+        await backRequest.post("/create/google", {
+          id: googleUser.uid,
+          email: googleUser.email,
         });
   
         // Show success notification
         toast.success("Signup successful!", { position: "top-right" });
+
+        router.replace("/signup/addition");
       } catch (err) {
         console.log("could not login with google", err);
         setError(err.response.data);
@@ -59,8 +62,19 @@ export default function Signup() {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, user.email, user.password);
         // Signed in 
-        const user = userCredential.user;
+        const emailUser = userCredential.user;
         // Perform further actions with the user object
+        console.log(emailUser);
+        await backRequest.post("/create/password", {
+          id: emailUser.uid,
+          firstName: user.fname,
+          lastName: user.lname,
+          email: user.email,
+        });
+        // Show success notification
+        toast.success("Signup successful!", { position: "top-right" });
+        
+        router.push("/home");
       } catch (err) {
         console.log("could not login", error);
         setError(err.response.data);
@@ -259,6 +273,7 @@ export default function Signup() {
                   Signup
                 </button>
                 {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+                <ToastContainer/>
               </div>
             </form>
           </div>
