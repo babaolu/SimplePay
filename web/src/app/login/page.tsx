@@ -15,11 +15,11 @@ export default function LoginPage() {
     const [error, setError] = useState(null);
     const [show, setShow] = useState(true);
     const [user, setUser] = useState({
-      username: "",
       email: "",
       password: "",
     });
     const router = useRouter();
+    const auth = getAuth(app);
   
     //handle all notifications
   
@@ -28,9 +28,13 @@ export default function LoginPage() {
         return { ...prev, [event.target.name]: event.target.value };
       });
     };
+
+    // Function to check if all fields are filled
+  const isFormValid = () => {
+    return Object.values(user).every((field) => field.trim() !== '');
+  };
   
     async function handleGoogleClick() {
-      const auth = getAuth(app);
       try {
         await setPersistence(auth, browserSessionPersistence);
         const provider = new GoogleAuthProvider();
@@ -40,9 +44,7 @@ export default function LoginPage() {
         if (!credential) return;
         const token = credential.accessToken;
         
-        // The signed-in user info.
-        const user = result.user;
-        toast.success("Signup successful!", { position: "top-right" });
+        toast.success("Login successful!", { position: "top-right" });
         
         router.push("/home");
 
@@ -58,14 +60,13 @@ export default function LoginPage() {
   
     async function handleSubmit(event : React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
-      const auth = getAuth(app);
       try {
         await setPersistence(auth, browserSessionPersistence);
         const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
         // Signed in 
-        const user = userCredential.user;
+        const emailUser = userCredential.user;
         // Perform further actions with the user object
-        toast.success("Signup successful!", { position: "top-right" });
+        toast.success("Login successful!", { position: "top-right" });
         
         router.push("/home");
       } catch (error) {
@@ -73,7 +74,7 @@ export default function LoginPage() {
         const errorMessage = error.message;
         console.error(`Error ${errorCode}: ${errorMessage}`);
       }
-      }
+    }
   
     const handleShow = () => {
       setShow(!show);
@@ -202,6 +203,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   className="text-white text-sm w-fit !bg-[#0E9F6E]  hover:!bg-[#046c4e] font-semibold rounded-md py-2 px-4 tracking-[0.05em]"
+                  disabled={!isFormValid()}
                 >
                   SignIn
                 </button>

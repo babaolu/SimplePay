@@ -5,12 +5,17 @@ const app = initializeApp({
   credential: applicationDefault()
 });
 
-getAuth()
-  .verifyIdToken(idToken)
-  .then((decodedToken) => {
-    const uid = decodedToken.uid;
-    // ...
-  })
-  .catch((error) => {
-    // Handle error
-  });
+
+// Verify request token and return uid
+export default function authRoute(req, res, next) {
+  const idToken = req.headers['authorization'];
+  idToken && getAuth().verifyIdToken(idToken)
+    .then((decodedToken) => {
+      if (decodedToken) {
+        req['uid'] = decodedToken.uid;
+      }
+    }).catch((error) => {
+      // Handle error
+    });
+  next();
+}

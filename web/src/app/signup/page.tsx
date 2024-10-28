@@ -1,7 +1,7 @@
 "use client";
 
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider,
-    signInWithPopup, onAuthStateChanged } from "firebase/auth";
+    signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import { app } from "../firebase";
 import Image from "next/image";
@@ -29,6 +29,11 @@ export default function Signup() {
         return { ...prev, [event.target.name]: event.target.value };
       });
     };
+
+    // Function to check if all fields are filled
+  const isFormValid = () => {
+    return Object.values(user).every((field) => field.trim() !== '');
+  };
   
     async function handleGoogleClick() {
       try {
@@ -65,7 +70,7 @@ export default function Signup() {
         const emailUser = userCredential.user;
         // Perform further actions with the user object
         console.log(emailUser);
-        await backRequest.post("/create/password", {
+        await backRequest.post("/create", {
           id: emailUser.uid,
           firstName: user.fname,
           lastName: user.lname,
@@ -269,6 +274,7 @@ export default function Signup() {
                 <button
                   type="submit"
                   className="text-white text-sm w-fit !bg-[#0E9F6E]  hover:!bg-[#046c4e] font-semibold rounded-md py-2 px-4 tracking-[0.05em]"
+                  disabled={!isFormValid()}
                 >
                   Signup
                 </button>
