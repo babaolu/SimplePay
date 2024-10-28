@@ -42,15 +42,7 @@ export default function Signup() {
         const result = await signInWithPopup(auth, provider);
         const googleUser = result.user;
         console.log(googleUser);
-        await backRequest.post("/create/google", {
-          id: googleUser.uid,
-          email: googleUser.email,
-        });
-  
-        // Show success notification
-        toast.success("Signup successful!", { position: "top-right" });
-
-        router.replace("/signup/addition");
+        router.replace("/signup/complete");
       } catch (err) {
         console.log("could not login with google", err);
         setError(err.response.data);
@@ -78,7 +70,8 @@ export default function Signup() {
         });
         // Show success notification
         toast.success("Signup successful!", { position: "top-right" });
-        
+       
+        await auth.signOut();
         router.push("/home");
       } catch (err) {
         console.log("could not login", error);

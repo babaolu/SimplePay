@@ -1,4 +1,4 @@
-import { pool } from './pg_instance';
+import { pool } from './pg_instance.js';
 
 export default async function createUser(req, res) {
   const { id, firstName, lastName, email } = req.body;
