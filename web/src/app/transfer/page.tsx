@@ -79,8 +79,8 @@ export default function Scanner() {
   }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="flex overflow-y-auto justify-center items-center h-screen w-full relative font-[family-name:var(--font-geist-sans)] justify-items-center">
+      <main className="flex flex-col bg-white/90 rounded-xl py-40 px-16 items-center sm:items-start">
       
         {
           (<div className="justify-center items-center justify-items-center">

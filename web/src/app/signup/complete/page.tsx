@@ -38,19 +38,21 @@ export default function CompleteGoogleSignUp() {
       // Perform further actions with the user object
       console.log(completeUser);
       await backRequest.post("/create", {
-        id: completeUser?.providerData[0].uid,
+        id: completeUser?.uid,
         firstName: user.fname,
         lastName: user.lname,
-        email: completeUser?.providerData[0].email
+        email: completeUser?.email
       });
       // Show success notification
       toast.success("Signup successful!", { position: "top-right" });
       
       await auth.signOut();
       router.push("/home");
-    } catch (err) {
+    } catch (err: any) {
       console.log("could not login", error);
-      setError(err.response.data);
+      if (err.response) {
+        setError(err.response.data);
+      }
       
       // Show error notification
       toast.error(error || "Signup failed. Please try again.", {
@@ -64,7 +66,7 @@ export default function CompleteGoogleSignUp() {
       if (!isFormValid) {
         event.preventDefault();
         await auth.currentUser?.delete();
-        event.returnValue = "SignUp not complete!";
+        alert("Proper name not provided")
       }
     };
   
@@ -77,7 +79,7 @@ export default function CompleteGoogleSignUp() {
   
     return (
       // Container
-      <div className="flex justify-center items-center h-screen w-full relative ">
+      <div className="flex overflow-y-auto justify-center items-center h-screen w-full relative font-[family-name:var(--font-geist-sans)] justify-items-center">
         {/* <!-- Right: Login Form --> */}
         <div className=" w-full h-screen lg:w-2/3 flex flex-col justify-between items-center">
   

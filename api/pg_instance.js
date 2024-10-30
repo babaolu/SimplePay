@@ -9,7 +9,7 @@ async function dbSetup() {
   try {
     const client = await pool.connect();
     await client.query(`CREATE TABLE IF NOT EXISTS users (
-      id VARCHAR(64) PRIMARY KEY,
+      id VARCHAR(256) PRIMARY KEY,
       firstName VARCHAR(32),
       lastName VARCHAR(32),
       email VARCHAR(48));`);

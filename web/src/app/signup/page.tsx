@@ -1,7 +1,7 @@
 "use client";
 
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider,
-    signInWithPopup } from "firebase/auth";
+    signInWithPopup, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { useState } from "react";
 import { app } from "../firebase";
 import Image from "next/image";
@@ -39,13 +39,17 @@ export default function Signup() {
       try {
         const provider = new GoogleAuthProvider();
         const auth = getAuth(app);
+        await setPersistence(auth, browserSessionPersistence);
         const result = await signInWithPopup(auth, provider);
         const googleUser = result.user;
         console.log(googleUser);
         router.replace("/signup/complete");
-      } catch (err) {
-        console.log("could not login with google", err);
-        setError(err.response.data);
+      } catch (err: any) {
+        console.log("could not signup with google", err);
+
+        if (err.response) {
+          setError(err.response.data);
+        }
         // Show error notification
         toast.error(error || "Signup failed. Please try again.", {
           position: "top-right",
@@ -57,6 +61,7 @@ export default function Signup() {
       event.preventDefault();
       const auth = getAuth(app);
       try {
+        await setPersistence(auth, browserSessionPersistence);
         const userCredential = await createUserWithEmailAndPassword(auth, user.email, user.password);
         // Signed in 
         const emailUser = userCredential.user;
@@ -73,9 +78,12 @@ export default function Signup() {
        
         await auth.signOut();
         router.push("/home");
-      } catch (err) {
-        console.log("could not login", error);
-        setError(err.response.data);
+      } catch (err: any) {
+        console.log("could not register", error);
+        
+        if (err.response){
+          setError(err.response.data);
+        }
         // Show error notification
         toast.error(error || "Signup failed. Please try again.", {
           position: "top-right",
@@ -89,7 +97,7 @@ export default function Signup() {
   
     return (
       // Container
-      <div className="flex justify-center items-center h-screen w-full relative ">
+      <div className="flex overflow-y-auto justify-center items-center h-screen w-full relative font-[family-name:var(--font-geist-sans)] justify-items-center">
         {/* <!-- Right: Login Form --> */}
         <div className=" w-full h-screen lg:w-2/3 flex flex-col justify-between items-center">
   

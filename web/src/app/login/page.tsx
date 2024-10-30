@@ -8,7 +8,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import backRequest from "../utils/backRequest";
 import background from "../../../public/background.png";
 
 export default function LoginPage() {
@@ -19,7 +18,6 @@ export default function LoginPage() {
       password: "",
     });
     const router = useRouter();
-    const auth = getAuth(app);
   
     //handle all notifications
   
@@ -36,6 +34,7 @@ export default function LoginPage() {
   
     async function handleGoogleClick() {
       try {
+        const auth = getAuth(app);
         await setPersistence(auth, browserSessionPersistence);
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
@@ -48,9 +47,14 @@ export default function LoginPage() {
         
         router.push("/home");
 
-      } catch (err) {
-        console.log("could not login with google", err);
-        setError(err);
+      } catch (err: any) {
+        console.error("could not login with google", err);
+        const errorCode = err.code;
+        const errorMessage = err.message;
+        console.error(`Error ${errorCode}: ${errorMessage}`);
+        if (err.message) {
+          setError(err.message);
+        }
         // Show error notification
         toast.error(error || "Login failed. Please try again.", {
           position: "top-right",
@@ -61,18 +65,28 @@ export default function LoginPage() {
     async function handleSubmit(event : React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
       try {
+        const auth = getAuth(app);
         await setPersistence(auth, browserSessionPersistence);
         const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
         // Signed in 
         const emailUser = userCredential.user;
+        console.log(emailUser);
         // Perform further actions with the user object
         toast.success("Login successful!", { position: "top-right" });
         
         router.push("/home");
-      } catch (error) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      } catch (err: any) {
+        console.error("could not login with google", err);
+        const errorCode = err.code;
+        const errorMessage = err.message;
         console.error(`Error ${errorCode}: ${errorMessage}`);
+        if (err.message) {
+          setError(err.message);
+        }
+        // Show error notification
+        toast.error(error || "Login failed. Please try again.", {
+          position: "top-right",
+        });
       }
     }
   
@@ -82,13 +96,12 @@ export default function LoginPage() {
   
     return (
       // Container
-      <div className="flex justify-center items-center h-screen w-full relative ">
-        {/* <!-- Right: Login Form --> */}
+      <div className="flex overflow-y-auto justify-center items-center h-screen w-full relative font-[family-name:var(--font-geist-sans)] justify-items-center">
         <div className=" w-full h-screen lg:w-2/3 flex flex-col justify-between items-center">
   
           <div className="bg-white flex-1 pt-6 px-5 pb-12 inline-block max-h-max mt-14 rounded-xl">
             <h4 className="max-w-[450px] mx-auto text-[#333] text-2xl font-normal mb-6">
-              Create an account
+              Log In to account
             </h4>
             {/* <!-- Google Login --> */}
             <div className="flex items-center justify-between max-w-[450px] mx-auto">

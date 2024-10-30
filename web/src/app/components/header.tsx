@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../firebase";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import backRequest from "../utils/backRequest";
 
@@ -14,6 +15,7 @@ export default function Header() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [firstName, setFirstName] = useState("");
     const auth = getAuth(app);
+    const router = useRouter();
   
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -22,27 +24,34 @@ export default function Header() {
           sessionStorage.setItem("authState", "true");
           user.getIdToken().then((token) => {
             // Store token or set default header for Axios
-            backRequest.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            backRequest.defaults.headers.common["Authorization"] = token;
+            fetchUserData();
           });
-          (async () => {
-            try {
-              const result = await backRequest.get("/user");
-              setFirstName(result.data.firstName);
-              console.log(firstName);
-            } catch(error) {
-              console.error("Layout error:", error);
-            }
-          })();
         } else {
           setIsAuthenticated(false);
-          sessionStorage.removeItem("authState");
+          sessionStorage.setItem("authState", "false");
           delete backRequest.defaults.headers.common["Authorization"];
         }
       });
   
       return () => unsubscribe();
     }, []);
-  
+
+    async function fetchUserData() {
+      try {
+        const result = await backRequest.get("/user");
+        setFirstName(result.data.firstName);
+        console.log(firstName);
+      } catch(error) {
+        console.error("Layout error:", error);
+      }
+    }
+    
+    async function handleLogOut(event : React.MouseEvent<HTMLAnchorElement>) {
+      event.preventDefault(); // Prevents the link from navigating
+      await auth.signOut();
+      router.push("/home"); // Manually navigate to "/login" after sign-out
+    }
   
     return (
       <header className="row-start-3 flex gap-6 flex-wrap bg-[#d3e8eb]">
@@ -67,7 +76,7 @@ export default function Header() {
               <Link href="/signup">SignUp</Link>
             </> : <>
               <h2>{firstName}</h2>
-              <Link href="/logout">LogOut</Link>
+              <Link href="#" onClick={handleLogOut}>LogOut</Link>
             </>
             }
           </div>
