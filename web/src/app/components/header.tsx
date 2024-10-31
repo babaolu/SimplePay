@@ -24,7 +24,10 @@ export default function Header() {
           sessionStorage.setItem("authState", "true");
           user.getIdToken().then((token) => {
             // Store token or set default header for Axios
-            backRequest.defaults.headers.common["Authorization"] = token;
+            sessionStorage.setItem("authToken", token);
+            backRequest.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            sessionStorage.setItem("authToken", backRequest.defaults.headers.common["Authorization"]);
+            //console.log("Header Token:", backRequest.defaults.headers.common);
             fetchUserData();
           });
         } else {

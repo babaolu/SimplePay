@@ -2,6 +2,7 @@ import { pool } from './pg_instance.js';
 
 export default async function getUser(req, res) {
   let client;
+  console.log("Entered getUser!")
   try {
     client = await pool.connect();
     const result = await client.query(`SELECT firstname, lastname FROM users

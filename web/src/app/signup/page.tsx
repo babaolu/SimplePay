@@ -101,11 +101,11 @@ export default function Signup() {
         {/* <!-- Right: Login Form --> */}
         <div className=" w-full h-screen lg:w-2/3 flex flex-col justify-between items-center">
   
-          <div className="bg-white flex-1 flex-shrink-1 max-w-sm pt-6 px-5 pb-12 inline-block max-h-max mt-14 rounded-xl">
+          <div className="bg-white border-double border-8 border-stone-950 flex-auto max-w-xl pt-6 px-5 pb-12 inline-block max-h-max mt-14 rounded-xl">
             <h4 className="max-w-[450px] mx-auto text-[#333] text-2xl font-normal mb-6">
               Create an account
             </h4>
-            {/* <!-- Google Login --> */}
+            {/* <!-- Google Signup --> */}
             <div className="flex items-center justify-between max-w-[450px] mx-auto">
               <button type="button"
                 className="font-medium bg-white shadow-bshadow border py-2 w-full rounded-xl flex justify-center items-center text-sm hover:bg-gray-100 focus:outline-none"
@@ -142,7 +142,7 @@ export default function Signup() {
   
             <form onSubmit={handleSubmit}>
               {/* <!-- First Name Input --> */}
-              <div className="relative max-w-[450px] mx-auto flex sm:flex-col lg:flex-row justify-between items-center mb-3">
+              <div className="relative mx-auto flex flex-col lg:flex-row justify-between items-center mb-3">
                 <div className="w-[48%] relative">
                   <label
                     htmlFor="fname"

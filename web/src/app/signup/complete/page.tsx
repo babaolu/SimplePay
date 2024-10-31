@@ -80,10 +80,9 @@ export default function CompleteGoogleSignUp() {
     return (
       // Container
       <div className="flex overflow-y-auto justify-center items-center h-screen w-full relative font-[family-name:var(--font-geist-sans)] justify-items-center">
-        {/* <!-- Right: Login Form --> */}
         <div className=" w-full h-screen lg:w-2/3 flex flex-col justify-between items-center">
   
-          <div className="bg-white flex-1 flex-shrink-1 max-w-sm pt-6 px-5 pb-12 inline-block max-h-max mt-14 rounded-xl">
+          <div className="bg-white border-double border-8 border-stone-950 flex-auto max-w-xl pt-6 px-5 pb-12 inline-block max-h-max mt-14 rounded-xl">
             <h4 className="max-w-[450px] mx-auto text-[#333] text-2xl font-normal mb-6">
               Complete SignUp
             </h4>
