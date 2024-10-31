@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mono.co/connect.js": "^2.0.2",
     "axios": "^1.7.7",
     "firebase": "^11.0.1",
     "html5-qrcode": "^2.3.8",
