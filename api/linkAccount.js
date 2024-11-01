@@ -25,7 +25,7 @@ export default async function linkAccount(req, res) {
     res.status(400).send(error);
     console.error(error);
     return;
-  };
+  }
 
   if (account_id) {
     options = {
@@ -43,7 +43,7 @@ export default async function linkAccount(req, res) {
       res.status(404).send(error);
       console.error(error);
       return;
-    };
+    }
   }
 
   try {

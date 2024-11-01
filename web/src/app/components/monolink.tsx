@@ -42,7 +42,7 @@ export default function MonoButton() {
 
   return (
     <div className="mt-10 p-4">
-      <button onClick={() => {openMonoWidget()}}>
+      <button type="button" onClick={() => {openMonoWidget()}}>
         Link a financial account
       </button>
       <ToastContainer/>

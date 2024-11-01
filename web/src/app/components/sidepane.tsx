@@ -43,13 +43,13 @@ export default function SidePane() {
     });
 
     return () => unsubscribe();
-    if (sessionStorage.getItem("authState") === "true") {
+    /*if (sessionStorage.getItem("authState") === "true") {
         backRequest.defaults.headers.common["Authorization"] 
           = sessionStorage.getItem("authToken");
         console.log("SidePane Token:", backRequest.defaults.headers.common);
     } else {
         setIsAuthenticated(false);
-    }
+    }*/
   }, [fullName, isAuthenticated]);
 
 
@@ -66,7 +66,23 @@ export default function SidePane() {
         console.log("Data not retrieved!")
       }
     } catch(error) {
-      console.error("Layout error:", error);
+      console.error("Account fetch error:", error);
+    }
+  }
+
+  async function unlinkAccount() {
+    try {
+      console.log("Unlinking!");
+      const result = await backRequest.delete("/unlink");
+      if (result.status === 200) {
+        setBalance_details({fullName: '', accountNumber: '',
+          balance: '', bankName: '', currency: ''
+        });
+      }
+      console.log('Account unlinked!');
+      setIsLinked(false);
+    } catch(error) {
+      console.error("Unlink error:", error);
     }
   }
 
@@ -76,7 +92,7 @@ export default function SidePane() {
         }`}
       >
         <div className="items-center justify-between p-4 border-b border-gray-600">
-          <button
+          <button type="button"
             className="text-gray-300 hover:text-white"
             onClick={toggleSidebar}
             aria-label="Toggle Sidebar"
@@ -95,12 +111,18 @@ export default function SidePane() {
               <span className={`${isCollapsed ? "hidden" : "inline"}`}>Make Transer</span>
           </Link>
           {/* Add more links here */}
-          {isAuthenticated && (<span className={`${isCollapsed ? "hidden" : "inline"}`}>
+          {isAuthenticated && (<span className={`${isCollapsed ? "hidden" : "inline"} flex`}>
             {isLinked? <div className="flex flex-col px-4 py-8">
               <span>{fullName}</span>
               <span>{accountNumber}</span>
-              <span>{`${balance}${currency}`}</span>
               <span>{bankName}</span>
+              <span className="mt-6">{`Bal: ${balance}${currency}`}</span>
+              <button type="button"
+                className="text-white bg-red-600 hover:bg-red-900 mt-4 mb-4"
+                onClick={unlinkAccount}
+                aria-label="Unlink Account">
+                UnLink
+              </button>
             </div> : <MonoButton/>}
           </span>)}
         </nav>
