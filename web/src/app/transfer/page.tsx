@@ -88,9 +88,9 @@ export default function Scanner() {
               <div className="w-full max-w-xl h-auto flex items-center"
                 id="reader"></div>
             ) : isDecodedVisible && (
-            <div>
-              <p>Account No: {genCode.number}</p>
-              <p>Bank Name: {genCode.bankname}</p>
+            <div className="text-4xl sm: text-2xl pb-6 text-orange-950 font-extrabold font-mono tracking-wider text-center">
+              <p><span className="font-sans text-blue-950 tracking-tighter">Account No:</span> {genCode.number}</p>
+              <p><span className="font-sans text-blue-950 tracking-tighter">Bank Name:</span> {genCode.bankname}</p>
             </div>
             )}
             <button type="button" onClick={selectCamera}
