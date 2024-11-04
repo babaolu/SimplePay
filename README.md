@@ -8,6 +8,7 @@ SimlePay is a simple web application where users can make trasfers from their al
 - **Account linking/unlinking**
 - **Realtime Account balance information**
 - **QR Encoding and Scanning**
+- **Account Credetials Validation**
 - **Perforing Transfers**
 
 ## Installation
